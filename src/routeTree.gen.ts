@@ -13,22 +13,41 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as OrdersImport } from './routes/orders'
 import { Route as AuthRegisterImport } from './routes/auth/register'
 import { Route as AuthLoginImport } from './routes/auth/login'
 
 // Create Virtual Routes
 
+const SettingsLazyImport = createFileRoute('/settings')()
+const ProductsLazyImport = createFileRoute('/products')()
 const DashboardLazyImport = createFileRoute('/dashboard')()
+const CustomersLazyImport = createFileRoute('/customers')()
 const AppointmentsLazyImport = createFileRoute('/appointments')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
 
+const SettingsLazyRoute = SettingsLazyImport.update({
+  path: '/settings',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/settings.lazy').then((d) => d.Route))
+
+const ProductsLazyRoute = ProductsLazyImport.update({
+  path: '/products',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/products.lazy').then((d) => d.Route))
+
 const DashboardLazyRoute = DashboardLazyImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/dashboard.lazy').then((d) => d.Route))
+
+const CustomersLazyRoute = CustomersLazyImport.update({
+  path: '/customers',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/customers.lazy').then((d) => d.Route))
 
 const AppointmentsLazyRoute = AppointmentsLazyImport.update({
   path: '/appointments',
@@ -39,6 +58,11 @@ const AboutLazyRoute = AboutLazyImport.update({
   path: '/about',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
+
+const OrdersRoute = OrdersImport.update({
+  path: '/orders',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
@@ -63,6 +87,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/orders': {
+      preLoaderRoute: typeof OrdersImport
+      parentRoute: typeof rootRoute
+    }
     '/about': {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
@@ -71,8 +99,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppointmentsLazyImport
       parentRoute: typeof rootRoute
     }
+    '/customers': {
+      preLoaderRoute: typeof CustomersLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/dashboard': {
       preLoaderRoute: typeof DashboardLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/products': {
+      preLoaderRoute: typeof ProductsLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/settings': {
+      preLoaderRoute: typeof SettingsLazyImport
       parentRoute: typeof rootRoute
     }
     '/auth/login': {
@@ -90,9 +130,13 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
+  OrdersRoute,
   AboutLazyRoute,
   AppointmentsLazyRoute,
+  CustomersLazyRoute,
   DashboardLazyRoute,
+  ProductsLazyRoute,
+  SettingsLazyRoute,
   AuthLoginRoute,
   AuthRegisterRoute,
 ])
