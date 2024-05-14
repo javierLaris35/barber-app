@@ -13,13 +13,27 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as AuthRegisterImport } from './routes/auth/register'
+import { Route as AuthLoginImport } from './routes/auth/login'
 
 // Create Virtual Routes
 
+const DashboardLazyImport = createFileRoute('/dashboard')()
+const AppointmentsLazyImport = createFileRoute('/appointments')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
+
+const DashboardLazyRoute = DashboardLazyImport.update({
+  path: '/dashboard',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/dashboard.lazy').then((d) => d.Route))
+
+const AppointmentsLazyRoute = AppointmentsLazyImport.update({
+  path: '/appointments',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/appointments.lazy').then((d) => d.Route))
 
 const AboutLazyRoute = AboutLazyImport.update({
   path: '/about',
@@ -30,6 +44,16 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const AuthRegisterRoute = AuthRegisterImport.update({
+  path: '/auth/register',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthLoginRoute = AuthLoginImport.update({
+  path: '/auth/login',
+  getParentRoute: () => rootRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -43,11 +67,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
+    '/appointments': {
+      preLoaderRoute: typeof AppointmentsLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/dashboard': {
+      preLoaderRoute: typeof DashboardLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/auth/login': {
+      preLoaderRoute: typeof AuthLoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/auth/register': {
+      preLoaderRoute: typeof AuthRegisterImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([IndexLazyRoute, AboutLazyRoute])
+export const routeTree = rootRoute.addChildren([
+  IndexLazyRoute,
+  AboutLazyRoute,
+  AppointmentsLazyRoute,
+  DashboardLazyRoute,
+  AuthLoginRoute,
+  AuthRegisterRoute,
+])
 
 /* prettier-ignore-end */

@@ -120,6 +120,13 @@ export function NavigationMenuDemo() {
                         </NavigationMenuLink>
                     </Link>
                 </NavigationMenuItem>
+                <NavigationMenuItem>
+                    <Link to="/appointments" >
+                        <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                            Appointments
+                        </NavigationMenuLink>
+                    </Link>
+                </NavigationMenuItem>
             </NavigationMenuList>
         </NavigationMenu>
     )
