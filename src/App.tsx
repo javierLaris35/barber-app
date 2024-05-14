@@ -18,8 +18,6 @@ function App() {
 
   return (
     <>
-        {/*<Button>Click me</Button>*/}
-
         <RouterProvider router={router} />
     </>
   )
