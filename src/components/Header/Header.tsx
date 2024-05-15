@@ -1,6 +1,17 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Button } from "../ui/button"
-import { Home, LineChart, Package, Package2, PanelLeft, Search, ShoppingCart, Users2 } from "lucide-react"
+import {
+  CalendarDays,
+  Home,
+  LineChart,
+  Package,
+  Package2,
+  PanelLeft,
+  Search,
+  Settings,
+  ShoppingCart,
+  Users2
+} from "lucide-react"
 import { Link } from "@tanstack/react-router";
 
 import {
@@ -13,6 +24,17 @@ import {
   } from "@/components/ui/breadcrumb"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui//dropdown-menu";
+import HeaderItem from "@/components/Header/HeaderItem.tsx";
+import SidebarItem from "@/components/Sidebar/SidebarItem.tsx";
+
+const headerLinks = [
+  { name: 'Home', to: '/', icon: <Home className="h-5 w-5" /> },
+  { name: 'Products', to: '/products', icon: <Package className="h-5 w-5" /> },
+  { name: 'Orders', to: '/orders', icon: <ShoppingCart className="h-5 w-5" /> },
+  { name: 'Customers', to: '/customers', icon: <Users2 className="h-5 w-5" /> },
+  { name: 'Appointments', to: '/appointments', icon: <CalendarDays className="h-5 w-5" /> }
+];
+
 
 export default function Header() {
     return (
@@ -26,6 +48,7 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent side="left" className="sm:max-w-xs">
               <nav className="grid gap-6 text-lg font-medium">
+                {/* Special Path */}
                 <Link
                   href="#"
                   className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
@@ -33,41 +56,11 @@ export default function Header() {
                   <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
                   <span className="sr-only">Acme Inc</span>
                 </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <Home className="h-5 w-5" />
-                  Dashboard
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  Orders
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-foreground"
-                >
-                  <Package className="h-5 w-5" />
-                  Products
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <Users2 className="h-5 w-5" />
-                  Customers
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <LineChart className="h-5 w-5" />
-                  Settings
-                </Link>
+                {/* Special Path End */}
+                {headerLinks.map(({ icon, to, name }, index) => (
+                    <HeaderItem  name={name} to={to} icon={icon} key={index}/>
+                ))}
+                <HeaderItem name="Settings" to="/settings" icon={<Settings className="h-5 w-5"/>}/>
               </nav>
             </SheetContent>
           </Sheet>
