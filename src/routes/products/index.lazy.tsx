@@ -1,52 +1,26 @@
 import { DataTable } from '@/components/DataTable/DataTable'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@radix-ui/react-checkbox'
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu'
-import { createLazyFileRoute } from '@tanstack/react-router'
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
+import { createLazyFileRoute, Outlet } from '@tanstack/react-router'
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
+import axios from 'axios'
+import { useState, useEffect } from 'react'
+import Header from '@/components/Header/Header'
 
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-]
- 
-export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  image?: string;
+  description?: string;
+  type: string;
+  time?: string;
+  status?: string;
 }
- 
-export const columns: ColumnDef<Payment>[] = [
+
+export const columns: ColumnDef<Product>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -70,32 +44,53 @@ export const columns: ColumnDef<Payment>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "image",
+    header: "",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <div className="capitalize">{row.getValue("image")}</div>
     ),
   },
   {
-    accessorKey: "email",
+    accessorKey: "name",
+    header: "Name",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("name")}</div>
+    ),
+  },
+  {
+    accessorKey: "description",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Description
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => <div className="lowercase">{row.getValue("description")}</div>,
   },
   {
-    accessorKey: "amount",
+    accessorKey: "type",
+    header: "Type",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("type")}</div>
+    ),
+  },
+  {
+    accessorKey: "time",
+    header: "Time",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("time")}</div>
+    ),
+  },
+  {
+    accessorKey: "price",
     header: () => <div className="text-right">Amount</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
+      const amount = parseFloat(row.getValue("price"))
  
       // Format the amount as a dollar amount
       const formatted = new Intl.NumberFormat("en-US", {
@@ -137,9 +132,43 @@ export const columns: ColumnDef<Payment>[] = [
   },
 ]
 
+const fetchProducts = async () => {
+  const response = await axios.get('http://localhost:3000/api/products');
+  return response.data;
+};
 
+const Index = () => {
+  const [products, setProducts] = useState<Product[]>([]);
 
+  useEffect(() => {
+      const fetchData = async () => {
+          try {
+              const data = await fetchProducts();
+              setProducts(data);
+          } catch (error) {
+              console.error('Error fetching products:', error);
+          }
+      };
 
-export const Route = createLazyFileRoute('/products')({
-  component: () => <div><DataTable columns={columns} data={data}/></div>
+      fetchData();
+  }, []);
+
+  return (
+    <div>
+      <Header title='Products' subTitle={`Here's a list of your products.`}/>
+      <DataTable 
+        columns={columns} 
+        data={products} 
+        columnToFilter='name' 
+        addButtonLabel='Add Product' 
+        linkTo='/products/product' 
+        addButton
+      />
+      <Outlet />
+    </div>
+  );
+}
+
+export const Route = createLazyFileRoute('/products/')({
+  component: Index,
 })

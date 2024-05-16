@@ -1,5 +1,5 @@
 "use client"
- 
+import { Link } from '@tanstack/react-router'
 import * as React from "react"
 import {
     ColumnDef,
@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, PlusCircle } from "lucide-react"
  
 import { Button } from "@/components/ui/button"
 
@@ -37,10 +37,14 @@ import {
 interface DataTableProps<T> {
     columns: ColumnDef<T>[];
     data: T[];
+    columnToFilter?: string;
+    addButton?: boolean;
+    addButtonLabel?: string;
+    linkTo?: string;
 }
 
  
-export function DataTable<T> ({columns, data}: DataTableProps<T>) {
+export function DataTable<T> ({columns, data, columnToFilter, addButton, addButtonLabel ,linkTo}: DataTableProps<T>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -71,17 +75,19 @@ export function DataTable<T> ({columns, data}: DataTableProps<T>) {
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+        { columnToFilter && 
+          <Input
+            placeholder={`Filter ${columnToFilter}...`}
+            value={(table.getColumn(columnToFilter)?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn(columnToFilter)?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm h-full"
+          />
+        }
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline" size="sm" className="ml-auto">
               Columns <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -105,6 +111,21 @@ export function DataTable<T> ({columns, data}: DataTableProps<T>) {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
+        { addButton && 
+          <div className='ml-2'>
+            <Link
+              to={linkTo}
+              className=""
+            >
+              <Button className="h-full gap-1">
+                <PlusCircle className="h-4 w-4" />
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                  {addButtonLabel}
+                </span>
+              </Button>
+            </Link>
+          </div>
+        }
       </div>
       <div className="rounded-md border">
         <Table>
