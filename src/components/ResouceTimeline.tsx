@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import {Calendar, Views, DateLocalizer } from 'react-big-calendar'
+import {Calendar, Views, DateLocalizer } from 'react-big-calendar';
 
 
 const events = [

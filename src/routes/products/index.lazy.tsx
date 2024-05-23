@@ -7,7 +7,8 @@ import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import Header from '@/components/Header/Header'
+import Header from '@/components/Header/Header';
+import TasksTable from '../../tasks/page.tsx';
 
 export interface Product {
   id: string;
@@ -91,13 +92,13 @@ export const columns: ColumnDef<Product>[] = [
     header: () => <div className="text-right">Amount</div>,
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("price"))
- 
+
       // Format the amount as a dollar amount
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
       }).format(amount)
- 
+
       return <div className="text-right font-medium">{formatted}</div>
     },
   },
@@ -106,7 +107,7 @@ export const columns: ColumnDef<Product>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const payment = row.original
- 
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -156,14 +157,17 @@ const Index = () => {
   return (
     <div>
       <Header title='Products' subTitle={`Here's a list of your products.`}/>
-      <DataTable 
-        columns={columns} 
-        data={products} 
-        columnToFilter='name' 
-        addButtonLabel='Add Product' 
-        linkTo='/products/product' 
-        addButton
-      />
+      {/*<DataTable */}
+      {/*  columns={columns} */}
+      {/*  data={products} */}
+      {/*  columnToFilter='name' */}
+      {/*  addButtonLabel='Add Product' */}
+      {/*  linkTo='/products/product' */}
+      {/*  addButton*/}
+      {/*/>*/}
+      <TasksTable />
+
+
       <Outlet />
     </div>
   );

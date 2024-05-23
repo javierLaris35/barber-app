@@ -1,4 +1,4 @@
-"use client"
+
 import { Link } from '@tanstack/react-router'
 import * as React from "react"
 import {
@@ -14,7 +14,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import { ChevronDown, PlusCircle } from "lucide-react"
- 
+
 import { Button } from "@/components/ui/button"
 
 import {
@@ -32,7 +32,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
- 
+
 
 interface DataTableProps<T> {
     columns: ColumnDef<T>[];
@@ -43,7 +43,7 @@ interface DataTableProps<T> {
     linkTo?: string;
 }
 
- 
+
 export function DataTable<T> ({columns, data, columnToFilter, addButton, addButtonLabel ,linkTo}: DataTableProps<T>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -52,7 +52,7 @@ export function DataTable<T> ({columns, data, columnToFilter, addButton, addButt
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
- 
+
   const table = useReactTable({
     data,
     columns,
@@ -71,11 +71,11 @@ export function DataTable<T> ({columns, data, columnToFilter, addButton, addButt
       rowSelection,
     },
   })
- 
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        { columnToFilter && 
+        { columnToFilter &&
           <Input
             placeholder={`Filter ${columnToFilter}...`}
             value={(table.getColumn(columnToFilter)?.getFilterValue() as string) ?? ""}
@@ -111,7 +111,7 @@ export function DataTable<T> ({columns, data, columnToFilter, addButton, addButt
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-        { addButton && 
+        { addButton &&
           <div className='ml-2'>
             <Link
               to={linkTo}
