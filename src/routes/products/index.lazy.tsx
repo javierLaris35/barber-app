@@ -1,4 +1,4 @@
-import { DataTable } from '@/components/DataTable/DataTable'
+// import { DataTable } from '@/components/DataTable/DataTable'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@radix-ui/react-checkbox'
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
@@ -154,6 +154,10 @@ const Index = () => {
       fetchData();
   }, []);
 
+  console.log({
+    products
+  })
+
   return (
     <div>
       <Header title='Products' subTitle={`Here's a list of your products.`}/>
@@ -166,8 +170,6 @@ const Index = () => {
       {/*  addButton*/}
       {/*/>*/}
       <TasksTable />
-
-
       <Outlet />
     </div>
   );
