@@ -13,7 +13,10 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as ProductsImport } from './routes/products'
 import { Route as OrdersImport } from './routes/orders'
+import { Route as ProductsIndexImport } from './routes/products.index'
+import { Route as ProductsProductIdImport } from './routes/products.$productId'
 import { Route as AuthRegisterImport } from './routes/auth/register'
 import { Route as AuthLoginImport } from './routes/auth/login'
 
@@ -25,8 +28,6 @@ const CustomersLazyImport = createFileRoute('/customers')()
 const AppointmentsLazyImport = createFileRoute('/appointments')()
 const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
-const ProductsIndexLazyImport = createFileRoute('/products/')()
-const ProductsProductLazyImport = createFileRoute('/products/product')()
 
 // Create/Update Routes
 
@@ -55,6 +56,11 @@ const AboutLazyRoute = AboutLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
+const ProductsRoute = ProductsImport.update({
+  path: '/products',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const OrdersRoute = OrdersImport.update({
   path: '/orders',
   getParentRoute: () => rootRoute,
@@ -65,19 +71,15 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
-const ProductsIndexLazyRoute = ProductsIndexLazyImport.update({
-  path: '/products/',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/products/index.lazy').then((d) => d.Route),
-)
+const ProductsIndexRoute = ProductsIndexImport.update({
+  path: '/',
+  getParentRoute: () => ProductsRoute,
+} as any)
 
-const ProductsProductLazyRoute = ProductsProductLazyImport.update({
-  path: '/products/product',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/products/product.lazy').then((d) => d.Route),
-)
+const ProductsProductIdRoute = ProductsProductIdImport.update({
+  path: '/$productId',
+  getParentRoute: () => ProductsRoute,
+} as any)
 
 const AuthRegisterRoute = AuthRegisterImport.update({
   path: '/auth/register',
@@ -99,6 +101,10 @@ declare module '@tanstack/react-router' {
     }
     '/orders': {
       preLoaderRoute: typeof OrdersImport
+      parentRoute: typeof rootRoute
+    }
+    '/products': {
+      preLoaderRoute: typeof ProductsImport
       parentRoute: typeof rootRoute
     }
     '/about': {
@@ -129,13 +135,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRegisterImport
       parentRoute: typeof rootRoute
     }
-    '/products/product': {
-      preLoaderRoute: typeof ProductsProductLazyImport
-      parentRoute: typeof rootRoute
+    '/products/$productId': {
+      preLoaderRoute: typeof ProductsProductIdImport
+      parentRoute: typeof ProductsImport
     }
     '/products/': {
-      preLoaderRoute: typeof ProductsIndexLazyImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof ProductsIndexImport
+      parentRoute: typeof ProductsImport
     }
   }
 }
@@ -145,6 +151,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
   OrdersRoute,
+  ProductsRoute.addChildren([ProductsProductIdRoute, ProductsIndexRoute]),
   AboutLazyRoute,
   AppointmentsLazyRoute,
   CustomersLazyRoute,
@@ -152,8 +159,6 @@ export const routeTree = rootRoute.addChildren([
   SettingsLazyRoute,
   AuthLoginRoute,
   AuthRegisterRoute,
-  ProductsProductLazyRoute,
-  ProductsIndexLazyRoute,
 ])
 
 /* prettier-ignore-end */

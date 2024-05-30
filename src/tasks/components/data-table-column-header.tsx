@@ -15,14 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {DropdownMenuSeparator} from "@radix-ui/react-dropdown-menu";
-// import { Button } from "@/registry/new-york/ui/button"
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from "@/registry/new-york/ui/dropdown-menu"
+
 
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
