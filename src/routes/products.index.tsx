@@ -12,18 +12,8 @@ import { useState, useEffect } from 'react'
 import Header from '@/components/Header/Header';
 import TasksTable from '@/tasks/page.tsx';
 import { createFileRoute } from '@tanstack/react-router'
+import {Product} from "@/types/Product.tsx";
 
-
-export interface Product {
-    id: string;
-    name: string;
-    price: number;
-    image?: string;
-    description?: string;
-    type: string;
-    time?: string;
-    status?: string;
-}
 
 export const columns: ColumnDef<Product>[] = [
     {
@@ -137,10 +127,10 @@ export const columns: ColumnDef<Product>[] = [
     },
 ]
 
-const fetchProducts = async () => {
-    const response = await axios.get('http://localhost:3000/api/products');
-    return response.data;
-};
+// const fetchProducts = async () => {
+//     const response = await axios.get('http://localhost:3000/api/products');
+//     return response.data;
+// };
 
 const Index = () => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -155,7 +145,7 @@ const Index = () => {
             }
         };
 
-        fetchData();
+        // fetchData();
     }, []);
 
     console.log({
